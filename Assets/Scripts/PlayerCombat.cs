@@ -1,21 +1,56 @@
+using Photon.Pun;
 using UnityEngine;
 
-public class PlayerCombat : MonoBehaviour
+public class PlayerCombat : MonoBehaviourPun
 {
     [SerializeField] private int damageAmount = 20;
+    [SerializeField] private float pushForce = 3.0f;
 
+    private Animator animator;
+    [SerializeField] private ParticleSystem attackarticle;
+
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            //Attack();
+            photonView.RPC("Attack", RpcTarget.All);
+        }
+    }
+    [PunRPC]
     public void Attack()
     {
-
-        Debug.Log("Player attacked for " + damageAmount + " damage!");
+        attackarticle.Play();
+        animator.SetTrigger("AttackTrig");
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit))
+        //if (Physics.Raycast(transform.position, transform.forward, out hit,2f))
+        Collider[] hitColliders = Physics.OverlapSphere(attackarticle.gameObject.transform.position, 3);
+        foreach(Collider collider in hitColliders)
         {
-            PlayerHealth targetHealth = hit.collider.GetComponent<PlayerHealth>();
+
+            if (collider.gameObject == gameObject)
+                continue;
+
+            PlayerHealth targetHealth = collider.GetComponent<PlayerHealth>();
             if (targetHealth != null)
             {
+                Debug.Log("Player attacked for " + damageAmount + " damage!");
                 targetHealth.TakeDamage(damageAmount);
+            }
+
+            Rigidbody targetRigidbody = collider.GetComponent<Rigidbody>();
+            if (targetRigidbody != null)
+            {
+                Vector3 pushDirection = collider.transform.position - attackarticle.gameObject.transform.position;
+                pushDirection.y = 0;
+                pushDirection.Normalize();
+
+                targetRigidbody.AddForce(pushDirection * pushForce, ForceMode.Impulse);
             }
         }
     }

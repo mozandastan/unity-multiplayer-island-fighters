@@ -9,7 +9,7 @@ using TMPro;
 public class MenuController : MonoBehaviourPunCallbacks
 {
 
-    string playerName = "Player";
+    static string playerName = "";
     string gameVersion = "0.1";
 
     [Header("PlayerName")]
@@ -36,6 +36,7 @@ public class MenuController : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        PhotonNetwork.AutomaticallySyncScene = true;
 
         if (!PhotonNetwork.IsConnected)
         {
@@ -51,12 +52,17 @@ public class MenuController : MonoBehaviourPunCallbacks
 
         //This makes sure we can use PhotonNetwork.LoadLevel() on the master client and all clients in the same room sync their level automatically
         PhotonNetwork.JoinLobby();
-        PhotonNetwork.AutomaticallySyncScene = true;
+        
     }
     public override void OnJoinedLobby()
     {
         Debug.Log("Lobiye baðlandý");
         //PlayerNamePanel.SetActive(true);
+        if(!string.IsNullOrEmpty(playerName))
+        {
+            PlayerNamePanel.SetActive(false);
+            RoomListMenu.SetActive(true);
+        }
     }
 
     public void CreatePlayername()
@@ -66,7 +72,7 @@ public class MenuController : MonoBehaviourPunCallbacks
             return;
         }
         playerName = inputPlayername.text;
-        PhotonNetwork.NickName = inputPlayername.text;
+        PhotonNetwork.NickName = playerName;
 
     }
 
@@ -102,6 +108,7 @@ public class MenuController : MonoBehaviourPunCallbacks
         }
 
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+
 
     }
 
@@ -166,15 +173,5 @@ public class MenuController : MonoBehaviourPunCallbacks
         Debug.Log("Oda sahibi deðiþti");
 
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-    }
-
-    public override void OnLeftLobby()
-    {
-        Debug.Log("On Left Lobby");
-
-        foreach (Transform room in roomListContent)
-        {
-            Destroy(room.gameObject);
-        }
     }
 }

@@ -13,6 +13,7 @@ public class PlayerManager : MonoBehaviourPun
     [Header("Components")]
     [SerializeField] private GameObject myCam;
     [SerializeField] private ThirdPersonController myMovement;
+    [SerializeField] private PlayerCombat playerCombat;
 
     void Start()
     {
@@ -27,6 +28,7 @@ public class PlayerManager : MonoBehaviourPun
         {
             nameText.color = Color.white;
             myMovement.enabled = false;
+            playerCombat.enabled = false;
             myCam.SetActive(false);
         }
     }

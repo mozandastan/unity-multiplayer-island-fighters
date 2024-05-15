@@ -12,6 +12,8 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        Debug.Log("Got hit!");
+
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
