@@ -1,10 +1,14 @@
 using Photon.Pun;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerCombat : MonoBehaviourPun
 {
     [SerializeField] private int damageAmount = 20;
     [SerializeField] private float pushForce = 3.0f;
+
+    [SerializeField] private float attackCooldown = 1.5f;
+    private float lastAttackTime = 0f;
 
     private Animator animator;
     [SerializeField] private ParticleSystem attackarticle;
@@ -17,8 +21,13 @@ public class PlayerCombat : MonoBehaviourPun
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            //Attack();
-            photonView.RPC("Attack", RpcTarget.All);
+            if(Time.time >= lastAttackTime + attackCooldown)
+            {
+                lastAttackTime = Time.time;
+                //Attack();
+                photonView.RPC("Attack", RpcTarget.All);
+            }
+
         }
     }
     [PunRPC]
