@@ -10,6 +10,15 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
+        RoomManager.instance.SwitchToPlayerCamera();
+    }
+
+    private void Update()
+    {
+        if(transform.position.y <= -10 && gameObject.activeSelf)
+        {
+            Die();
+        }
     }
 
     public void TakeDamage(int damage)
@@ -25,8 +34,21 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    void Die()
+    private void Die()
     {
-        Debug.Log("Player died!");
+        gameObject.SetActive(false);
+        RoomManager.instance.SwitchToGeneralCamera();
+        Invoke("Respawn", 2f);
+    }
+    private void Respawn()
+    {
+        currentHealth = 100;
+        healthImage.fillAmount = (float)currentHealth / 100;
+
+        gameObject.SetActive (true);
+        gameObject.transform.position = RoomManager.instance.GetSpawnPoint().position;
+
+        RoomManager.instance.SwitchToPlayerCamera();
+
     }
 }

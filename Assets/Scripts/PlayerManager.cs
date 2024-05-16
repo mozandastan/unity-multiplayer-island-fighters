@@ -23,6 +23,7 @@ public class PlayerManager : MonoBehaviourPun
         if (photonView.IsMine)
         {
             nameText.color = Color.green;
+            
         }
         else
         {

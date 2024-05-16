@@ -36,7 +36,7 @@ public class PlayerCombat : MonoBehaviourPun
         attackarticle.Play();
         animator.SetTrigger("AttackTrig");
 
-        RaycastHit hit;
+        //RaycastHit hit;
         //if (Physics.Raycast(transform.position, transform.forward, out hit,2f))
         Collider[] hitColliders = Physics.OverlapSphere(attackarticle.gameObject.transform.position, 3);
         foreach(Collider collider in hitColliders)

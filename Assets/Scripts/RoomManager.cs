@@ -15,6 +15,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private bool pauseState = false;
 
+    [SerializeField] private GameObject generalCamera;
+    private GameObject playerCamera;
+
     void Start()
     {
         instance = this;
@@ -22,7 +25,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if(PhotonNetwork.CurrentRoom != null) 
         {
             // *************
-            Invoke("SpawnPlayer", 0.5f);
+            Invoke("SpawnPlayer", 1f);
         }
     }
     private void Update()
@@ -35,11 +38,14 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
     private void SpawnPlayer()
     {
+        GameObject player = PhotonNetwork.Instantiate(playerObj.name, GetSpawnPoint().position, Quaternion.identity,0);
+        playerCamera = player.GetComponentInChildren<Camera>().gameObject;
+    }
+    public Transform GetSpawnPoint()
+    {
         int randomPoint = Random.Range(0, spawnPointObj.transform.childCount);
         Transform spawnPoint = spawnPointObj.transform.GetChild(randomPoint);
-
-        PhotonNetwork.Instantiate(playerObj.name, spawnPoint.position, Quaternion.identity,0);
-
+        return spawnPoint;
     }
     private void SetPauseFnc()
     {
@@ -55,5 +61,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         PhotonNetwork.LoadLevel(0);
+    }
+
+    public void SwitchToGeneralCamera()
+    {
+        generalCamera.SetActive(true);
+        playerCamera.SetActive(false);
+    }
+    public void SwitchToPlayerCamera()
+    {
+        generalCamera.SetActive(false);
+        playerCamera.SetActive(true);
     }
 }
