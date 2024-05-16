@@ -18,11 +18,13 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject generalCamera;
     private GameObject playerCamera;
 
+    private PhotonView PV;
+
     void Start()
     {
         instance = this;
 
-        if(PhotonNetwork.CurrentRoom != null) 
+        if (PhotonNetwork.CurrentRoom != null)
         {
             // *************
             Invoke("SpawnPlayer", 1f);
@@ -38,8 +40,14 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
     private void SpawnPlayer()
     {
-        GameObject player = PhotonNetwork.Instantiate(playerObj.name, GetSpawnPoint().position, Quaternion.identity,0);
-        playerCamera = player.GetComponentInChildren<Camera>().gameObject;
+        GameObject player = PhotonNetwork.Instantiate(playerObj.name, GetSpawnPoint().position, Quaternion.identity, 0);
+
+        PV = player.GetComponent<PhotonView>();
+        if (PV.IsMine)
+        {
+            playerCamera = player.GetComponentInChildren<Camera>().gameObject;
+            SwitchToPlayerCamera();
+        }
     }
     public Transform GetSpawnPoint()
     {
@@ -65,12 +73,19 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void SwitchToGeneralCamera()
     {
-        generalCamera.SetActive(true);
-        playerCamera.SetActive(false);
+        if (PV.IsMine)
+        {
+            generalCamera.SetActive(true);
+            playerCamera.SetActive(false);
+        }
+
     }
     public void SwitchToPlayerCamera()
     {
-        generalCamera.SetActive(false);
-        playerCamera.SetActive(true);
+        if (PV.IsMine)
+        {
+            generalCamera.SetActive(false);
+            playerCamera.SetActive(true);
+        }
     }
 }

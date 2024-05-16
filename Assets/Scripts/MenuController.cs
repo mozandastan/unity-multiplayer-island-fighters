@@ -34,6 +34,8 @@ public class MenuController : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject startGameButton;
     [SerializeField] private TMP_Text roomNameText;
 
+    private Room currentRoom;
+
     private void Start()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
@@ -95,7 +97,8 @@ public class MenuController : MonoBehaviourPunCallbacks
         RoomListMenu.SetActive(false);
         RoomPlayersMenu.SetActive(true);
 
-        roomNameText.text = PhotonNetwork.CurrentRoom.Name;
+        currentRoom = PhotonNetwork.CurrentRoom;
+        roomNameText.text = $"{currentRoom.Name} ({currentRoom.PlayerCount}/{currentRoom.MaxPlayers})";
 
         foreach (Transform item in playerListContent)
         {
@@ -139,6 +142,7 @@ public class MenuController : MonoBehaviourPunCallbacks
             }
             GameObject roomTemp = Instantiate(roomListItemPrefab, roomListContent);
             roomTemp.transform.GetChild(0).GetComponent<TMP_Text>().text = room.Name;
+            roomTemp.transform.GetChild(1).GetComponent<TMP_Text>().text = $"{room.PlayerCount}/{room.MaxPlayers}";
             roomTemp.GetComponent<Button>().onClick.AddListener(() => JoinRoom(room.Name));
         }
 
@@ -152,6 +156,8 @@ public class MenuController : MonoBehaviourPunCallbacks
     {
         GameObject player = Instantiate(playerItemPrefab, playerListContent);
         player.transform.GetChild(0).GetComponent<TMP_Text>().text = newPlayer.NickName;
+
+        roomNameText.text = $"{currentRoom.Name} ({currentRoom.PlayerCount}/{currentRoom.MaxPlayers})";
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
@@ -163,6 +169,7 @@ public class MenuController : MonoBehaviourPunCallbacks
                 break;
             }
         }
+        roomNameText.text = $"{currentRoom.Name} ({currentRoom.PlayerCount}/{currentRoom.MaxPlayers})";
     }
     public void StartGameBtnFnc()
     {

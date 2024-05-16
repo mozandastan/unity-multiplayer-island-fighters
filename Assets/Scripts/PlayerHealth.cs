@@ -1,7 +1,8 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviourPun
 {
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private Image healthImage;
@@ -10,45 +11,86 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
-        RoomManager.instance.SwitchToPlayerCamera();
+
     }
 
     private void Update()
     {
-        if(transform.position.y <= -10 && gameObject.activeSelf)
+        if (transform.position.y <= -10 && gameObject.activeSelf)
         {
-            Die();
+            //Die();
+            photonView.RPC("Die", RpcTarget.All);
         }
     }
+    //public void TakeDamage(int damage)
+    //{
 
+    //        Debug.Log("Got hit!");
+
+    //        currentHealth -= damage;
+    //        UpdateHealthUI();
+    //        if (currentHealth <= 0)
+    //        {
+    //            Die();
+    //        }
+    //}
+    //private void UpdateHealthUI()
+    //{
+    //    healthImage.fillAmount = (float)currentHealth / maxHealth;
+    //}
+    //private void Die()
+    //{
+    //    gameObject.SetActive(false);
+    //    Invoke("Respawn", 2f);
+
+    //    if (photonView.IsMine)
+    //        RoomManager.instance.SwitchToGeneralCamera();
+    //    }
+    [PunRPC]
     public void TakeDamage(int damage)
     {
-        Debug.Log("Got hit!");
-
-        currentHealth -= damage;
-        healthImage.fillAmount = (float)currentHealth / 100;
-
-        if (currentHealth <= 0)
+        if (photonView.IsMine)
         {
-            Die();
+            Debug.Log("Got hit!");
+
+            currentHealth -= damage;
+            
+            if (currentHealth <= 0)
+            {
+                //Die();
+                photonView.RPC("Die", RpcTarget.All);
+            }
+
+            photonView.RPC("UpdateHealthUI", RpcTarget.AllBuffered, currentHealth);
         }
     }
-
+    [PunRPC]
+    private void UpdateHealthUI(int currentHealth)
+    {
+        // Her oyuncu kendi ve diðer oyuncularýn hasar alan oyuncunun can çubuðunu güncelliyor
+        healthImage.fillAmount = (float)currentHealth / maxHealth;
+    }
+    [PunRPC]
     private void Die()
     {
         gameObject.SetActive(false);
-        RoomManager.instance.SwitchToGeneralCamera();
         Invoke("Respawn", 2f);
+
+        if (photonView.IsMine)
+            RoomManager.instance.SwitchToGeneralCamera();
     }
+
     private void Respawn()
     {
-        currentHealth = 100;
-        healthImage.fillAmount = (float)currentHealth / 100;
+        currentHealth = maxHealth;
+        //UpdateHealthUI();
+        photonView.RPC("UpdateHealthUI", RpcTarget.All, currentHealth);
 
-        gameObject.SetActive (true);
         gameObject.transform.position = RoomManager.instance.GetSpawnPoint().position;
+        gameObject.SetActive(true);
 
-        RoomManager.instance.SwitchToPlayerCamera();
+        if (photonView.IsMine)
+            RoomManager.instance.SwitchToPlayerCamera();
 
     }
 }

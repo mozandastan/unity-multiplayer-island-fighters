@@ -20618,6 +20618,7 @@ MonoBehaviour:
   myCam: {fileID: 1976617042154819654}
   myMovement: {fileID: 7752711115644189647}
   playerCombat: {fileID: 3363032528870591087}
+  playerHealth: {fileID: 135895224426620876}
 --- !u!114 &7198643499340578622
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -14,6 +14,7 @@ public class PlayerManager : MonoBehaviourPun
     [SerializeField] private GameObject myCam;
     [SerializeField] private ThirdPersonController myMovement;
     [SerializeField] private PlayerCombat playerCombat;
+    [SerializeField] private PlayerHealth playerHealth;
 
     void Start()
     {
@@ -30,13 +31,14 @@ public class PlayerManager : MonoBehaviourPun
             nameText.color = Color.white;
             myMovement.enabled = false;
             playerCombat.enabled = false;
+            //playerHealth.enabled = false;
             myCam.SetActive(false);
         }
     }
 
     void Update()
     {
-        if (cam == null)
+        if (cam == null || !cam.gameObject.activeSelf)
             cam = FindObjectOfType<Camera>();
 
         if (cam == null)
