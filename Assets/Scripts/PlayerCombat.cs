@@ -90,7 +90,7 @@ public class PlayerCombat : MonoBehaviourPun
             {
                 Debug.Log("Player attacked for " + damageAmount + " damage!");
                 //targetHealth.TakeDamage(damageAmount);
-                targetHealth.photonView.RPC("TakeDamage", RpcTarget.AllBuffered, damageAmount);
+                targetHealth.photonView.RPC("TakeDamage", RpcTarget.AllBuffered, damageAmount, photonView.ViewID);
 
                 PhotonView targetPhotonView = targetHealth.GetComponent<PhotonView>();
                 if (targetPhotonView != null)

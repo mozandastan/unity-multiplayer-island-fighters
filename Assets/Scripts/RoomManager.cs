@@ -2,6 +2,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,9 +12,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     [SerializeField] private GameObject spawnPointObj;
     [SerializeField] private GameObject playerObj;
-    [SerializeField] private GameObject PauseCanvas;
+    [SerializeField] private GameObject PausePanel;
+    [SerializeField] private GameObject ScoreboardPanel;
 
     private bool pauseState = false;
+    private bool scoreboardState = false;
 
     [SerializeField] private GameObject generalCamera;
     private GameObject playerCamera;
@@ -35,7 +38,12 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             pauseState = !pauseState;
-            SetPauseFnc();
+            SetPanelStateFnc(PausePanel, pauseState);
+        }
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            scoreboardState = !scoreboardState;
+            SetPanelStateFnc(ScoreboardPanel, scoreboardState);
         }
     }
     private void SpawnPlayer()
@@ -55,11 +63,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
         Transform spawnPoint = spawnPointObj.transform.GetChild(randomPoint);
         return spawnPoint;
     }
-    private void SetPauseFnc()
+    private void SetPanelStateFnc(GameObject panel, bool state)
     {
-        PauseCanvas.SetActive(pauseState);
-        Cursor.lockState = pauseState ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible = pauseState;
+        panel.SetActive(state);
+        Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = state;
     }
     public void LeaveRoom()
     {

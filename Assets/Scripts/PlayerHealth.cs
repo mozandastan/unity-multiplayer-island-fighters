@@ -8,10 +8,16 @@ public class PlayerHealth : MonoBehaviourPun
     [SerializeField] private Image healthImage;
     private int currentHealth;
 
+    private Animator animator;
+
+    private PlayerManager playerManager;
+    private PlayerManager attackerManager;
+
     void Start()
     {
         currentHealth = maxHealth;
-
+        playerManager = GetComponent<PlayerManager>();
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -47,18 +53,30 @@ public class PlayerHealth : MonoBehaviourPun
     //        RoomManager.instance.SwitchToGeneralCamera();
     //    }
     [PunRPC]
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, int attackerViewID)
     {
+        animator.SetTrigger("HitTrig");
+
         if (photonView.IsMine)
         {
             Debug.Log("Got hit!");
 
             currentHealth -= damage;
-            
+
+            attackerManager = PhotonView.Find(attackerViewID).GetComponent<PlayerManager>();
+
             if (currentHealth <= 0)
             {
                 //Die();
                 photonView.RPC("Die", RpcTarget.All);
+
+                //attackerManager = PhotonView.Find(attackerViewID).GetComponent<PlayerManager>();
+                //if (attackerManager != null)
+                //{
+                //    // Öldüren oyuncunun PlayerManager'ýndaki AddKill fonksiyonunu çaðýr
+                //    //attackerManager.AddKill();
+                //    attackerManager.photonView.RPC("AddKill", RpcTarget.AllBuffered);
+                //}
             }
 
             photonView.RPC("UpdateHealthUI", RpcTarget.AllBuffered, currentHealth);
@@ -73,12 +91,21 @@ public class PlayerHealth : MonoBehaviourPun
     [PunRPC]
     private void Die()
     {
+        if (attackerManager != null)
+        {
+            // Öldüren oyuncunun PlayerManager'ýndaki AddKill fonksiyonunu çaðýr
+            //attackerManager.AddKill();
+            attackerManager.photonView.RPC("AddKill", RpcTarget.AllBuffered);
+        }
+        playerManager.AddDeath();
+
         gameObject.SetActive(false);
         Invoke("Respawn", 2f);
 
         if (photonView.IsMine)
             RoomManager.instance.SwitchToGeneralCamera();
     }
+
 
     private void Respawn()
     {
