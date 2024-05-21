@@ -13,6 +13,9 @@ public class PlayerCombat : MonoBehaviourPun
     private Animator animator;
     [SerializeField] private ParticleSystem attackarticle;
 
+    [SerializeField] private AudioClip attackSound;
+    [SerializeField] private AudioSource audioSource;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -75,6 +78,8 @@ public class PlayerCombat : MonoBehaviourPun
         attackarticle.Play();
         animator.SetTrigger("AttackTrig");
 
+        PlayAttackSound();
+
         if (!photonView.IsMine)
             return;
 
@@ -117,6 +122,13 @@ public class PlayerCombat : MonoBehaviourPun
             pushDirection.Normalize();
 
             targetRigidbody.AddForce(pushDirection * pushForce, ForceMode.Impulse);
+        }
+    }
+    private void PlayAttackSound()
+    {
+        if (attackSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(attackSound);
         }
     }
 }

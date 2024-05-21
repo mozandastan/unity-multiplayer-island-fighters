@@ -13,8 +13,13 @@ public class PlayerHealth : MonoBehaviourPun
     private PlayerManager playerManager;
     private PlayerManager attackerManager;
 
+    [SerializeField] private AudioClip hitSound;
+    [SerializeField] private AudioClip respawnSound;
+    [SerializeField] private AudioSource audioSource;
+
     void Start()
     {
+        PlayRespawnSound();
         currentHealth = maxHealth;
         playerManager = GetComponent<PlayerManager>();
         animator = GetComponent<Animator>();
@@ -56,6 +61,7 @@ public class PlayerHealth : MonoBehaviourPun
     public void TakeDamage(int damage, int attackerViewID)
     {
         animator.SetTrigger("HitTrig");
+        PlayHitSound();
 
         if (photonView.IsMine)
         {
@@ -116,8 +122,25 @@ public class PlayerHealth : MonoBehaviourPun
         gameObject.transform.position = RoomManager.instance.GetSpawnPoint().position;
         gameObject.SetActive(true);
 
+        PlayRespawnSound();
+
         if (photonView.IsMine)
             RoomManager.instance.SwitchToPlayerCamera();
 
+    }
+    private void PlayHitSound()
+    {
+        if (hitSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(hitSound);
+        }
+    }
+    private void PlayRespawnSound()
+    {
+        if (respawnSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(respawnSound);
+
+        }
     }
 }
