@@ -8,6 +8,7 @@ Welcome to the Multiplayer Game project! This project is a Unity-based multiplay
 - [Installation](#installation)
 - [Usage](#usage)
 - [Gameplay](#gameplay)
+- [Assets](#assets)
 - [Code Structure](#code-structure)
 
 ## Features
@@ -83,4 +84,15 @@ Handles player health management, including taking damage, updating the health U
 
 #### Scoreboard.cs
 Manages the in-game scoreboard, updating player stats when properties change.
+
+## Assets
+
+This project uses various assets for game functionality and visuals. Below is a list of the main assets used:
+
+- [PUN 2 - FREE](https://assetstore.unity.com/packages/tools/network/pun-2-free-119922): Used for real-time multiplayer functionality.
+- [FlatPoly: Floating Islands](https://assetstore.unity.com/packages/3d/environments/landscapes/flatpoly-floating-islands-100809): Used for creating the game's environment with floating islands.
+- [Quirky Series - FREE Animals Pack](https://assetstore.unity.com/packages/3d/characters/animals/quirky-series-free-animals-pack-178235): Used for adding animal characters in the game.
+- [Cartoon FX Remaster Free](https://assetstore.unity.com/packages/vfx/particles/cartoon-fx-remaster-free-109565): Used for visual effects such as explosions and magic spells.
+- [Customizable Skybox](https://assetstore.unity.com/packages/2d/textures-materials/sky/customizable-skybox-174576): Used for creating a dynamic sky background.
+- [Hyper Casual Mobile GUI](https://assetstore.unity.com/packages/2d/gui/hyper-casual-mobile-gui-268659): Used for the game's user interface elements.
 
