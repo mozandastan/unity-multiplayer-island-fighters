@@ -8,8 +8,8 @@ Welcome to the Multiplayer Game project! This project is a Unity-based multiplay
 - [Installation](#installation)
 - [Usage](#usage)
 - [Gameplay](#gameplay)
-- [Assets](#assets)
 - [Code Structure](#code-structure)
+- [Assets](#assets)
 
 ## Features
 
