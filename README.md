@@ -2,6 +2,11 @@
 
 Welcome to the Multiplayer Game project! This project is a Unity-based multiplayer game using Photon for networking. The game features real-time player interactions, including combat mechanics and a dynamic scoreboard.
 
+![Menu1](https://github.com/mozandastan/unity-multiplayer-island-fighters/assets/151640771/f377cb6b-8bbd-421c-ab66-40b730870e9a) ![Menu2](https://github.com/mozandastan/unity-multiplayer-island-fighters/assets/151640771/96c84d15-a10a-4c31-8d41-720f82d8082a)
+![Game3](https://github.com/mozandastan/unity-multiplayer-island-fighters/assets/151640771/b15f5b79-5953-499a-95e1-b06a0a66b9ba) ![Game 4](https://github.com/mozandastan/unity-multiplayer-island-fighters/assets/151640771/eb7e576f-9aae-47fb-bbb8-c7f911632290)
+![Game2](https://github.com/mozandastan/unity-multiplayer-island-fighters/assets/151640771/11111eff-5906-47a1-aec6-dd2c2cc04f37)
+
+
 ## Table of Contents
 
 - [Features](#features)
